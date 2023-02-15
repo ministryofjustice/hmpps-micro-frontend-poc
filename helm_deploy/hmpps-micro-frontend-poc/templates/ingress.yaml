@@ -8,7 +8,7 @@ metadata:
   generation: 1
   labels:
     app: hmpps-micro-frontend-poc
-    mylabel: 123
+    mylabel: "my-custom-label"
   name: hmpps-micro-frontend-poc-v1-2
   namespace: hmpps-micro-frontend-poc-dev
 spec:
