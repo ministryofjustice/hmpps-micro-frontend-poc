@@ -77,3 +77,4 @@ spec:
     app.kubernetes.io/instance: hmpps-micro-frontend-poc-nginx
     app.kubernetes.io/name: hmpps-micro-frontend-poc-nginx
   type: ClusterIP
+ype: ClusterIP
