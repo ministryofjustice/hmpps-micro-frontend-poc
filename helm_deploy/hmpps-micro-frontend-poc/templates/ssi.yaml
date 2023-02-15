@@ -29,6 +29,8 @@ data:
         location /component{
           proxy_pass http://hmpps-micro-frontend-poc-component.hmpps-micro-frontend-poc-dev.svc.cluster.local/;
         }
+      }
+    }
 ---
 apiVersion: v1
 kind: Pod
