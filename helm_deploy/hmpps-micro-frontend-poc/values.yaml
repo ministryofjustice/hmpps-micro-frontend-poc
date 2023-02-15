@@ -9,13 +9,6 @@ generic-service:
     tag: app_version    # override at deployment time
     port: 3000
 
-  ingress:
-    enabled: true
-    v1_2_enabled: true
-    v0_47_enabled: false
-    host: app-hostname.local    # override per environment
-    tlsSecretName: hmpps-micro-frontend-poc-cert
-
   livenessProbe:
     httpGet:
       path: /ping
