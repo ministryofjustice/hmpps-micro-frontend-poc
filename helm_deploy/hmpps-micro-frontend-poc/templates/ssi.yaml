@@ -42,7 +42,7 @@ metadata:
   namespace: hmpps-micro-frontend-poc-dev
 spec:
   containers:
-    - name: common
+    - name: hmpps-micro-frontend-poc-nginx
       image: nginxinc/nginx-unprivileged:1.23.3
       imagePullPolicy: IfNotPresent
       volumeMounts:
@@ -58,3 +58,22 @@ spec:
           - key: nginx.conf
             path: nginx.conf
   restartPolicy: Never
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: hmpps-micro-frontend-poc-nginx
+    app.kubernetes.io/name: hmpps-micro-frontend-poc-nginx
+  name: hmpps-micro-frontend-poc-nginx
+  namespace: hmpps-micro-frontend-poc-dev
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app.kubernetes.io/instance: hmpps-micro-frontend-poc-nginx
+    app.kubernetes.io/name: hmpps-micro-frontend-poc-nginx
+  type: ClusterIP
