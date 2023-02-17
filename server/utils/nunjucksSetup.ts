@@ -2,7 +2,7 @@
 import nunjucks from 'nunjucks'
 import express from 'express'
 import * as pathModule from 'path'
-import { initialiseName } from './utils'
+import { formatDate, formatScheduleItem, initialiseName, summaryListOneHalfWidth } from './utils'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -10,7 +10,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   app.set('view engine', 'njk')
 
   app.locals.asset_path = '/assets/'
-  app.locals.applicationName = 'Hmpps Micro Frontend Poc'
+  app.locals.applicationName = 'Digital Prison Services'
 
   // Cachebusting version string
   if (production) {
@@ -39,4 +39,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   )
 
   njkEnv.addFilter('initialiseName', initialiseName)
+  njkEnv.addFilter('formatDate', formatDate)
+  njkEnv.addFilter('formatScheduleItem', formatScheduleItem)
+  njkEnv.addFilter('summaryListOneHalfWidth', summaryListOneHalfWidth)
 }

@@ -27,7 +27,7 @@ data:
         }
     
         location /component{
-          proxy_pass http://hmpps-micro-frontend-poc-component.hmpps-micro-frontend-poc-dev.svc.cluster.local/;
+          proxy_pass https://micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk/;
         }
       }
     }

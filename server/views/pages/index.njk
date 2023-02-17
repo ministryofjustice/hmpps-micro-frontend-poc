@@ -1,13 +1,15 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% extends "../partials/layout.njk" %}
-
 {% set pageTitle = applicationName + " - Home" %}
-{% set mainClasses = "app-container govuk-body" %}
-
+{% set mainClasses = "govuk-body" %}
+{% block beforeContent %}
+  {{ govukBackLink({
+    text: backLinkLabel,
+    href: "#",
+    classes: "govuk-link"
+  }) }}
+{% endblock %}
 {% block content %}
-
-  <h1>This site is under construction...</h1>
-  <p>Please check back later when there is content to view.</p>
-
-  <!--# include virtual="/component" -->
-
+  {% include "../partials/profileBanner/profileBanner.njk" %}
+  {% include "./overviewPage.njk" %}
 {% endblock %}
