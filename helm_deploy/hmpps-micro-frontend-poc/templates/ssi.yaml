@@ -13,6 +13,11 @@ data:
     http {
       keepalive_timeout  65;
       gzip  on;
+    
+      upstream component {
+        server hmpps-micro-frontend-poc-component.hmpps-micro-frontend-poc-dev.svc.cluster.local;
+      }
+    
       server {
         listen       8080;
         server_name  localhost;
@@ -26,8 +31,8 @@ data:
           proxy_pass http://hmpps-micro-frontend-poc.hmpps-micro-frontend-poc-dev.svc.cluster.local/;
         }
     
-        location /component{
-          proxy_pass https://micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk/;
+        location ~ /component/(.*)$ {
+          proxy_pass http://component/$1;
         }
       }
     }
