@@ -21,25 +21,6 @@ export default function populateCurrentUser(userService: UserService): RequestHa
   }
 }
 
-export function getUserLocations(userService: UserService): RequestHandler {
-  return async (req, res, next) => {
-    try {
-      if (res.locals.user) {
-        const locations = res.locals.user && (await userService.getUserLocations(res.locals.user.token))
-        if (locations) {
-          res.locals.user.locations = locations
-        } else {
-          logger.info('No user locations available')
-        }
-      }
-      next()
-    } catch (error) {
-      logger.error(error, `Failed to retrieve locations for: ${res.locals.user && res.locals.user.username}`)
-      next(error)
-    }
-  }
-}
-
 export function getUserRoles(userService: UserService): RequestHandler {
   return async (req, res, next) => {
     try {
@@ -54,46 +35,6 @@ export function getUserRoles(userService: UserService): RequestHandler {
       next()
     } catch (error) {
       logger.error(error, `Failed to retrieve roles for: ${res.locals.user && res.locals.user.username}`)
-      next(error)
-    }
-  }
-}
-
-export function getUserCaseLoads(userService: UserService): RequestHandler {
-  return async (req, res, next) => {
-    try {
-      if (res.locals.user) {
-        const caseLoads = res.locals.user && (await userService.getUserCaseLoads(res.locals.user.token))
-        if (caseLoads) {
-          res.locals.user.caseLoads = caseLoads
-        } else {
-          logger.info('No user case loads available')
-        }
-      }
-      next()
-    } catch (error) {
-      logger.error(error, `Failed to retrieve case loads for: ${res.locals.user && res.locals.user.username}`)
-      next(error)
-    }
-  }
-}
-
-export function getUserActiveCaseLoad(userService: UserService): RequestHandler {
-  return async (req, res, next) => {
-    try {
-      if (res.locals.user.activeCaseLoadId) {
-        const activeCaseLoad =
-          res.locals.user &&
-          (await userService.getUserCaseLoads(res.locals.user.token)).filter(caseLoad => caseLoad.currentlyActive)
-        if (activeCaseLoad) {
-          res.locals.user.activeCaseLoad = activeCaseLoad
-        } else {
-          logger.info('No user active case load id available')
-        }
-      }
-      next()
-    } catch (error) {
-      logger.error(error, `Failed to retrieve case loads for: ${res.locals.user && res.locals.user.username}`)
       next(error)
     }
   }

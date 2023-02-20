@@ -30,10 +30,15 @@ data:
         location / {
           proxy_pass http://hmpps-micro-frontend-poc.hmpps-micro-frontend-poc-dev.svc.cluster.local/;
         }
+ 
+        location ~ /component/assets/(.*)$ {
+          proxy_pass http://component/component/assets/$1;
+        }
     
         location ~ /component/(.*)$ {
           proxy_pass http://component/$1;
         }
+
       }
     }
 ---
