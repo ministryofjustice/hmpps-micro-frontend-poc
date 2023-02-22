@@ -1,110 +1,164 @@
+# HMPPS Micro-Frontend PoC 
 
+This project is a test the feasibility of micro-frontend architecture within
+HMPPS. There are a number of ways of implementing the architecture but this example 
+focuses on a technology called Server Side Includes (SSI).
 
-# hmpps-micro-frontend-poc
-[![repo standards badge](https://img.shields.io/badge/dynamic/json?color=blue&style=flat&logo=github&label=MoJ%20Compliant&query=%24.result&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-micro-frontend-poc)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-github-repositories.html#hmpps-micro-frontend-poc "Link to report")
-[![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-micro-frontend-poc/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-micro-frontend-poc)
+[This repository](https://github.com/ministryofjustice/hmpps-micro-frontend-poc) 
+was thrown together as an example of deploying the 'container' frontend service.
+An example of a service that provides a 'component' within the container's 
+page is [provided here](https://github.com/ministryofjustice/hmpps-micro-frontend-poc).
 
-Template github repo used for new Typescript based projects.
+The POC is deployed to our development environment and can be accessed at:
+https://micro-frontend-poc-dev.hmpps.service.justice.gov.uk/prisoner/A1234AA
 
-# Instructions
+You will need to sign in using either an external or prison user via HMPPS Auth.
+Make sure you include the `/prisoner/A1234AA` part of the URL above, you'll get 
+redirected to DPS if you hit the root of the URL. The example page is stolen 
+from the new [Prisoner Profile service](https://github.com/ministryofjustice/hmpps-prisoner-profile)
+and demonstrates how the 'Overview' part of the page could be provided by an
+entirely different frontend service, deployed independently of the container.
 
-If this is a HMPPS project then the project will be created as part of bootstrapping - 
-see https://github.com/ministryofjustice/dps-project-bootstrap.
+You can see exactly what the component is serving up by navigating directly
+to https://micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk/prisoner/A1234AA
 
-This bootstrap is community managed by the mojdt `#typescript` slack channel. 
-Please raise any questions or queries there. Contributions welcome!
+## The Problem Statement
 
-Our security policy is located [here](https://github.com/ministryofjustice/hmpps-micro-frontend-poc/security/policy). 
+1. As the number of our frontend services grows, managing common components such
+   as the header (inc. links for user management, caseload switching), footer 
+   (inc. user feedback), navigation, notifications/alerts etc. becomes 
+   increasingly difficult. These components should be as standard as possible 
+   across our services to avoid a disjointed user experience as users navigate 
+   across our services.
+2. Services (such as the Prisoner Profile) that pull in data and logic that is 
+   owned by different domains / teams struggle with ownership and prioritising 
+   competing demands of the various teams.  There is the question of who should
+   do the development of a feature, manage the production deployment and perform
+   the BAU support.  We have struggled in the past with the core DPS frontend
+   service when multiple teams have struggled with competing needs to get work
+   deployed to production.
 
-More information about the template project including features can be found [here](https://dsdmoj.atlassian.net/wiki/spaces/NDSS/pages/3488677932/Typescript+template+project).
+## A Potential Solution - Micro-Frontend Architecture
 
-## Creating a CloudPlatform namespace
+A definition taken from the [Martin Fowler page](https://martinfowler.com/articles/micro-frontends.html)
+says it is:
 
-When deploying to a new namespace, you may wish to use this template typescript project namespace as the basis for your new namespace:
+> An architectural style where independently deliverable frontend applications 
+> are composed into a greater whole
 
-<https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-micro-frontend-poc>
+I think it could tackle both problems in the Problem Statement.
 
-This template namespace includes an AWS elasticache setup - which is required by this template project.
+1. Common components could be injected into frontend applications using SSI. 
+   Updates to these components could be rolled out across our services 
+   immediately without downtime, with only one deployment.
+2. Services such as the Prisoner Profile could delegate certain areas
+   of the page to teams that own the data / domain to look after.
 
-Copy this folder, update all the existing namespace references, and submit a PR to the CloudPlatform team. Further instructions from the CloudPlatform team can be found here: <https://user-guide.cloud-platform.service.justice.gov.uk/#cloud-platform-user-guide>
+Clearly there are alternative approaches that need considering.  Currently 
+we rely on the HMPPS Typescript Template to provide some consistency and
+teams try to keep up to date with that to various degrees. This relies on
+the resource and diligence of the service team to keep things up to date.
+We could instead keep common components in a library and services pull in
+the latest version. This is probably the simplest effective approach but
+deploying a change across all services relies on each service updating
+the library and deploying to production. User experience suffers whilst
+this happens, especially for a major update in the library, and it
+requires resource in each service team to deploy the change.
 
-## Renaming from HMPPS Template Typescript - github Actions
+## A Potential Implementation - SSI
 
-Once the new repository is deployed. Navigate to the repository in github, and select the `Actions` tab.
-Click the link to `Enable Actions on this repository`.
+This particular PoC considers implementation using Server Side Includes,
+using [this section](https://martinfowler.com/articles/micro-frontends.html#Server-sideTemplateComposition)
+of the Martin Fowler site for inspiration.
 
-Find the Action workflow named: `rename-project-create-pr` and click `Run workflow`.  This workflow will
-execute the `rename-project.bash` and create Pull Request for you to review.  Review the PR and merge.
+We have made tech choices to minimise the need for client side JavaScript,
+both because it is in keeping with [GDS advice](https://www.gov.uk/service-manual/technology/using-progressive-enhancement)
+but also because of historic issues we've faced with supporting thin
+clients in prisons where excessive JavaScript has overloaded the central
+servers serving the thin clients. With this in mind I've first chosen to 
+investigate a server side approach.
 
-Note: ideally this workflow would run automatically however due to a recent change github Actions are not
-enabled by default on newly created repos. There is no way to enable Actions other then to click the button in the UI.
-If this situation changes we will update this project so that the workflow is triggered during the bootstrap project.
-Further reading: <https://github.community/t/workflow-isnt-enabled-in-repos-generated-from-template/136421>
+## Key Details of the Implementation
 
-## Manually branding from template app
-Run the `rename-project.bash` and create a PR.
+I have tried to find an approach that would need minimal changes to
+the way service teams work currently.  This has led some of the decisions
+here.
 
-The rename-project.bash script takes a single argument - the name of the project and calculates from it the project description
-It then performs a search and replace and directory renames so the project is ready to be used.
+### AuthN / AuthZ 
 
-## Ensuring slack notifications are raised correctly
+In HMPPS we use the OAuth2 Authorization Code Flow to provide a user
+token back to the frontend service.  The service typically stores the
+user token in Redis and keeps an encrypted key in a cookie.  I have
+assumed that we would need to protect the component endpoints with 
+the same mechanism.  We would at the very least need to be able to 
+pass context of the user to components such as the common header.
 
-To ensure notifications are routed to the correct slack channels, update the `alerts-slack-channel` and `releases-slack-channel` parameters in `.circle/config.yml` to an appropriate channel.
+This raises perhaps the biggest / most disruptive issue. In this PoC,
+the container service and the component service **share the same Redis
+instance**. The container application completes the OAuth2 handshake,
+and stores the user token in Redis. When the page with SSI is requested,
+Nginx passes the cookie from the container service through
+to the component service, and since both services can find the user 
+session in the Redis instance, the component service considers the user 
+to be signed in too.
 
-## Running the app
-The easiest way to run the app is to use docker compose to create the service and all dependencies. 
+I think the way we'd want to do this in practice is to have a shared
+session store for keeping the user token.  We'd use a cookie that would
+apply to all `.justice.gov.uk` sites.  Once a user signs in with one 
+frontend application they are considered signed in everywhere else.
+This wouldn't preclude services from keeping a separate session store
+for things specific to their service.
 
-`docker-compose pull`
+We could replace the Token Verification API with this new service
+since it would effectively be doing the same job.
 
-`docker-compose up`
+It would also open the possibility of managing cross-service inactivity
+timeouts as a side effect.
 
-### Dependencies
-The app requires: 
-* hmpps-auth - for authentication
-* redis - session store and token caching
+### Cloud Platform Environment
 
-### Running the app for development
+There is nothing about the Cloud Platform Environment setup that is
+out of the ordinary.
 
-To start the main services excluding the example typescript template app: 
+### Helm Deployment
 
-`docker-compose up --scale=app=0`
+This PoC requires an [nginx container configured](/helm_deploy/hmpps-micro-frontend-poc/templates/ssi.yaml)
+to allow SSI, and to direct traffic to the relevant service, dependent
+on the URL. I've been able to use regex to pass through bits of the 
+URL to the component service to provide it context from the container
+service. This should be done within the [Generic Service Helm Chart](https://github.com/ministryofjustice/hmpps-helm-charts/tree/main/charts/generic-service)
+and codified into the k8s deployment - I've done the bare minimum here
+to prove it's possible.  Also probably what we would want to do
+is put the nginx container and the 'container' frontend service within
+the same pod, but that's a relatively minor detail.
 
-Install dependencies using `npm install`, ensuring you are using `node v18.x` and `npm v9.x`
+This PoC also requires a [change to the ingress setup](/helm_deploy/hmpps-micro-frontend-poc/templates/ingress.yaml).
+The ingress directs traffic to the nginx pod which in turn directs
+traffic to the relevant service. 
 
-Note: Using `nvm` (or [fnm](https://github.com/Schniz/fnm)), run `nvm install --latest-npm` within the repository folder to use the correct version of node, and the latest version of npm. This matches the `engines` config in `package.json` and the CircleCI build config.
+### SSI Directives
 
-And then, to build the assets and start the app with nodemon:
+The SSI directive in this PoC that pulls in the component HTML
+is [here](/server/views/pages/index.njk):
 
-`npm run start:dev`
+```
+<!--# include virtual="/component/prisoner/{{ prisonId }}" -->
+```
 
-### Run linter
+### Separation of assets (e.g. images, JavaScript and CSS)
 
-`npm run lint`
+One thing we'd be keen on avoiding is conflicting CSS declarations.
+This PoC shows we can avoid this by 'namespacing' the assets so that
+the component assets can have urls prefixed by the component name, e.g.
+`/my-component/assets/...` and the nginx rule loads the right asset.
 
-### Run tests
+## Potential Issues to Investigate Further
 
-`npm run test`
-
-### Running integration tests
-
-For local running, start a test db, redis, and wiremock instance by:
-
-`docker-compose -f docker-compose-test.yml up`
-
-Then run the server in test mode by:
-
-`npm run start-feature` (or `npm run start-feature:dev` to run with nodemon)
-
-And then either, run tests in headless mode with:
-
-`npm run int-test`
- 
-Or run tests with the cypress UI:
-
-`npm run int-test-ui`
-
-
-### Dependency Checks
-
-The template project has implemented some scheduled checks to ensure that key dependencies are kept up to date.
-If these are not desired in the cloned project, remove references to `check_outdated` job from `.circleci/config.yml`
+* SSI Injection - by turning SSI on we have to make sure that we
+  don't fall vulnerable to SSI injection. We need to check Nunjucks 
+  templating provides protection.
+* More difficult to test the end product, we'd need integration tests
+  to prove it all hangs together nicely
+* Complexity of our architecture - this adds more complexity for 
+  new developers to wrap their heads round
+* ...
