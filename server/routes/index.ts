@@ -21,7 +21,11 @@ export default function routes(service: Services): Router {
   })
 
   get('/', (req, res, next) => {
-    res.redirect(config.apis.dpsHomePageUrl)
+    res.send('Root')
+  })
+
+  get('/test', (req, res, next) => {
+    res.send('Rendering from the route /test')
   })
 
   return router
