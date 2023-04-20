@@ -35,7 +35,7 @@ export default function setUpAuth(): Router {
     if (req.user) {
       req.logout(err => {
         if (err) return next(err)
-        return req.session.destroy(() => res.redirect(authSignOutUrl))
+        return res.redirect(authSignOutUrl)
       })
     } else res.redirect(authSignOutUrl)
   })

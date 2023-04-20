@@ -1,15 +1,35 @@
 version: '3.1'
 services:
 
-  redis:
+  redis-profile:
     image: 'redis:6.2'
     networks:
       - hmpps
-    container_name: redis-micro-frontends
+    container_name: redis-micro-frontends-profile
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
       - '6379:6379'
+
+  redis-component:
+    image: 'redis:6.2'
+    networks:
+      - hmpps
+    container_name: redis-micro-frontends-component
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6380:6379'
+
+  redis-shared:
+    image: 'redis:6.2'
+    networks:
+      - hmpps
+    container_name: redis-micro-frontends-shared
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6381:6379'
 
   hmpps-auth:
     image: quay.io/hmpps/hmpps-auth:latest
@@ -24,26 +44,17 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
 
-  nginx:
-    image: nginxinc/nginx-unprivileged:1.23.3
-    depends_on: [app]
-    networks:
-      - hmpps
-    container_name: nginx
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./conf/nginx.conf:/etc/nginx/nginx.conf
 
   app:
     build: .
     networks:
       - hmpps
-    depends_on: [redis]
+    depends_on: [redis-profile, redis-shared, hmpps-auth]
     ports:
-      - "3000:3000"
+      - '3000:3000' # TODO: Fix this, needed for the auth flow
     environment:
-      - REDIS_HOST=redis
+      - REDIS_HOST=redis-profile
+      - SHARED_REDIS_HOST=redis-shared
       - HMPPS_AUTH_EXTERNAL_URL=http://localhost:9090/auth
       - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
       - PORT=3000
@@ -54,6 +65,38 @@ services:
       - SYSTEM_CLIENT_SECRET=clientsecret
       - SESSION_SECRET=session-secret
       - DPS_HOME_PAGE_URL=http://localhost:3000
+
+  app-component:
+    build: ../hmpps-template-typescript
+    networks:
+      - hmpps
+    depends_on: [redis-profile, redis-shared, hmpps-auth]
+    ports:
+      - '3001:3000' # Added to check that the route requires auth
+    environment:
+      - REDIS_HOST=redis-profile
+      - SHARED_REDIS_HOST=redis-shared
+      - HMPPS_AUTH_EXTERNAL_URL=http://localhost:9090/auth
+      - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
+      - PORT=3000
+      - NODE_ENV=development
+      - API_CLIENT_ID=hmpps-prisoner-profile
+      - API_CLIENT_SECRET=clientsecret
+      - SYSTEM_CLIENT_ID=hmpps-prisoner-profile-system
+      - SYSTEM_CLIENT_SECRET=clientsecret
+      - SESSION_SECRET=session-secret
+      - DPS_HOME_PAGE_URL=http://localhost:3000
+
+  nginx:
+    image: nginxinc/nginx-unprivileged:1.23.3
+    depends_on: [app, app-component]
+    networks:
+      - hmpps
+    container_name: nginx
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./conf/nginx.conf:/etc/nginx/nginx.conf
 
 networks:
   hmpps:
