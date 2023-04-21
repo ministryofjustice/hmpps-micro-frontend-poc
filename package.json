@@ -1,0 +1,14 @@
+{
+  "name": "hmpps-micro-frontend-poc",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "husky": "^8.0.0"
+  },
+  "dependencies": {}
+}
