@@ -18,7 +18,7 @@
 {% endblock %}
 {% block pageTitle %}{{ pageTitle | default(applicationName) }}{% endblock %}
 {% block header %}
-  <!--# include virtual="/component/header?serviceName=Digital%20Prison%20Services" -->
+  <!--# include virtual="/component/header?serviceName={{applicationName | urlencode}}" -->
 {% endblock %}
 {% block bodyStart %}
 
