@@ -45,7 +45,7 @@ services:
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
 
   app:
-    build: .
+    build: ./app
     networks:
       - hmpps
     depends_on: [redis-profile, redis-shared, hmpps-auth]
