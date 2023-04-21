@@ -1,5 +1,4 @@
 import { type RequestHandler, Router } from 'express'
-import config from '../config'
 import { alerts, profileBannerData, profileBannerTopLinks, tabLinks } from '../data/profileBanner/profileBanner'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'

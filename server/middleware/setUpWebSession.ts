@@ -21,7 +21,7 @@ export default function setUpWebSession(): Router {
   //   }),
   // )
   router.use(
-    hmppsSession(client as any, {
+    hmppsSession(client, {
       https: config.https,
       session: { secret: config.session.secret },
       sharedSession: {
