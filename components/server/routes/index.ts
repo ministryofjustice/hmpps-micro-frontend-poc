@@ -12,7 +12,14 @@ export default function routes(service: Services): Router {
     res.render('pages/index')
   })
 
+  get('/header', (req, res, next) => {
+    console.log(`[component-app] Rendering route: ${req.url}`)
+    console.log('[component-app]', req.query)
+    res.render('components/header', { serviceName: req.query.serviceName })
+  })
+
   get('/test', (req, res, next) => {
+    console.log(`[component-app] Rendering route: ${req.url}`)
     res.send('Rendering from the template app - route /test')
   })
 

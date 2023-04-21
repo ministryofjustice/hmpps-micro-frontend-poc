@@ -18,7 +18,7 @@
 {% endblock %}
 {% block pageTitle %}{{ pageTitle | default(applicationName) }}{% endblock %}
 {% block header %}
-  {% include "./header.njk" %}
+  <!--# include virtual="/component/header?serviceName=Digital%20Prison%20Services" -->
 {% endblock %}
 {% block bodyStart %}
 
