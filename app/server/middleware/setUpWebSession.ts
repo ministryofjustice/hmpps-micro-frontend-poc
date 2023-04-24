@@ -10,25 +10,15 @@ export default function setUpWebSession(): Router {
   client.connect().catch((err: Error) => logger.error(`Error connecting to Redis`, err))
 
   const router = express.Router()
-  // router.use(
-  //   session({
-  //     store: new RedisStore({ client: client as unknown as Client }),
-  //     cookie: { secure: config.https, sameSite: 'lax', maxAge: config.session.expiryMinutes * 60 * 1000 },
-  //     secret: config.session.secret,
-  //     resave: false, // redis implements touch so shouldn't need this
-  //     saveUninitialized: false,
-  //     rolling: true,
-  //   }),
-  // )
   router.use(
     hmppsSession(client, {
       https: config.https,
       session: { secret: config.session.secret },
       sharedSession: {
         host: config.sharedRedis.host,
-        password: '',
+        password: config.sharedRedis.password,
         port: config.sharedRedis.port,
-        tls_enabled: 'false',
+        tls_enabled: config.sharedRedis.tls_enabled,
       },
     }),
   )

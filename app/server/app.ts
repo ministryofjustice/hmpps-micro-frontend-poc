@@ -30,9 +30,9 @@ export default function createApp(services: Services): express.Application {
   app.use(metricsMiddleware)
   app.use(setUpHealthChecks())
   app.use(setUpWebSecurity())
+  app.use(setUpStaticResources()) // Is there an issue with moving this up?
   app.use(setUpWebSession())
   app.use(setUpWebRequestParsing())
-  app.use(setUpStaticResources())
   nunjucksSetup(app, path)
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware())
