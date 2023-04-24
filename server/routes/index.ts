@@ -1,5 +1,4 @@
 import { type RequestHandler, Router } from 'express'
-import config from '../config'
 import { alerts, profileBannerData, profileBannerTopLinks, tabLinks } from '../data/profileBanner/profileBanner'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
@@ -21,7 +20,11 @@ export default function routes(service: Services): Router {
   })
 
   get('/', (req, res, next) => {
-    res.redirect(config.apis.dpsHomePageUrl)
+    res.send('Root')
+  })
+
+  get('/test', (req, res, next) => {
+    res.send('Rendering from the route /test')
   })
 
   return router
