@@ -106,7 +106,7 @@
     "express-session": "^1.17.3",
     "govuk-frontend": "^4.6.0",
     "helmet": "^6.1.5",
-    "hmpps-central-session": "https://github.com/ministryofjustice/hmpps-central-session#45f045bfa7bd6515060248d51c81214705af54d6",
+    "hmpps-central-session": "ministryofjustice/hmpps-central-session#store-now-in-minutes",
     "http-errors": "^2.0.0",
     "jquery": "^3.6.4",
     "jwt-decode": "^3.1.2",

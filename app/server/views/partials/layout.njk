@@ -18,7 +18,7 @@
 {% endblock %}
 {% block pageTitle %}{{ pageTitle | default(applicationName) }}{% endblock %}
 {% block header %}
-  <!--# include virtual="/component/header?serviceName={{applicationName | urlencode}}" -->
+  <!--# include virtual="/component/header?serviceName={{applicationName | urlencode}}&sessionServiceName=poc-app" -->
 {% endblock %}
 {% block bodyStart %}
 

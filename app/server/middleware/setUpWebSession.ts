@@ -12,6 +12,7 @@ export default function setUpWebSession(): Router {
   const router = express.Router()
   router.use(
     hmppsSession(client, {
+      serviceName: 'poc-app',
       https: config.https,
       session: { secret: config.session.secret },
       sharedSession: {
