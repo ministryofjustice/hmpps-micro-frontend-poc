@@ -22,6 +22,16 @@ entirely different frontend service, deployed independently of the container.
 You can see exactly what the component is serving up by navigating directly
 to https://micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk/prisoner/A1234AA
 
+## Running the proof of concept
+
+This app runs via `docker compose`, ensure this is setup and then run:
+
+```bash
+docker compose up
+```
+
+Once this runs the nginx server will be running on `localhost:8080` with an example page on `localhost:8080/prisoner/12345`, you will have to navigate here after logging in.
+
 ## The Problem Statement
 
 1. As the number of our frontend services grows, managing common components such
