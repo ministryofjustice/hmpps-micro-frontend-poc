@@ -35,7 +35,6 @@ export default function setUpAuth(): Router {
     if (req.user) {
       req.logout(err => {
         if (err) return next(err)
-        console.log('[setUpAuthentication] Destroying session: ', JSON.stringify(req.session))
         return res.redirect(authSignOutUrl)
       })
     } else res.redirect(authSignOutUrl)
