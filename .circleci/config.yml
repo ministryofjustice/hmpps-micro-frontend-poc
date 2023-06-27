@@ -59,29 +59,47 @@ commands:
       - store_artifacts:
           path: test_results/unit-test-reports.html
 
+jobs:
+  build_app:
+    executor:
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
+    working_directory: ./app/
+    steps:
+      - build:
+  unit_test_app:
+    executor:
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
+    working_directory: ./app/
+    steps:
+      - unit_test:
+  build_components:
+    executor:
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
+    working_directory: ./components/
+    steps:
+      - build:
+  unit_test_components:
+    executor:
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
+    working_directory: ./components/
+    steps:
+      - unit_test:
+
 workflows:
   version: 2
   build-test-and-deploy:
     jobs:
       - build_app:
-          executor:
-            name: hmpps/node
-            tag: << pipeline.parameters.node-version >>
-          working_directory: ./app/
-          steps:
-            - build:
           filters:
             tags:
               ignore: /.*/
       - unit_test_app:
-          executor:
-            name: hmpps/node
-            tag: << pipeline.parameters.node-version >>
-          working_directory: ./app/
           requires:
             - build_app
-          steps:
-            - unit_test:
       # Dont deploy these at the moment
       # - app/hmpps/helm_lint:
       #     name: helm_lint
@@ -106,24 +124,12 @@ workflows:
       #       - app/build_docker
       #     helm_timeout: 5m
       - build_components:
-          executor:
-            name: hmpps/node
-            tag: << pipeline.parameters.node-version >>
-          working_directory: ./components/
           filters:
             tags:
               ignore: /.*/
-          steps:
-            - build:
       - unit_test_components:
-          executor:
-            name: hmpps/node
-            tag: << pipeline.parameters.node-version >>
-          working_directory: ./components/
           requires:
             - build_components
-          steps:
-            - unit_test:
       # Dont deploy these at the moment
       # - components/hmpps/helm_lint:
       #     name: helm_lint
