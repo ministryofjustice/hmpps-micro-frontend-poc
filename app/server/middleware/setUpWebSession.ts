@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
-import { hmppsSession } from 'hmpps-central-session'
+import { hmppsSession } from '@ministryofjustice/hmpps-central-session'
 import express, { Router } from 'express'
 import { createRedisClient } from '../data/redisClient'
 import config from '../config'
