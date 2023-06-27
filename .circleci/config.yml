@@ -67,32 +67,67 @@ workflows:
   version: 2
   build-test-and-deploy:
     jobs:
-      - build:
+      - app/build:
+          working_directory: ./app/
           filters:
             tags:
               ignore: /.*/
-      - unit_test:
+      - app/unit_test:
+          working_directory: ./app/
+          requires:
+            - app/build
+      # Dont deploy these at the moment
+      # - app/hmpps/helm_lint:
+      #     name: helm_lint
+      # - app/hmpps/build_docker:
+      #     name: build_docker
+      #     filters:
+      #       branches:
+      #         only:
+      #           - main
+      # - app/hmpps/deploy_env:
+      #     name: app/deploy_dev
+      #     env: "dev"
+      #     jira_update: true
+      #     context: hmpps-common-vars
+      #     filters:
+      #       branches:
+      #         only:
+      #           - main
+      #     requires:
+      #       - app/helm_lint
+      #       - app/unit_test
+      #       - app/build_docker
+      #     helm_timeout: 5m
+      - components/build:
+          working_directory: ./components/
+          filters:
+            tags:
+              ignore: /.*/
+      - components/unit_test:
+          working_directory: ./components/
           requires:
             - build
-      - hmpps/helm_lint:
-          name: helm_lint
-      - hmpps/build_docker:
-          name: build_docker
-          filters:
-            branches:
-              only:
-                - main
-      - hmpps/deploy_env:
-          name: deploy_dev
-          env: "dev"
-          jira_update: true
-          context: hmpps-common-vars
-          filters:
-            branches:
-              only:
-                - main
-          requires:
-            - helm_lint
-            - unit_test
-            - build_docker
-          helm_timeout: 5m
+      # Dont deploy these at the moment
+      # - components/hmpps/helm_lint:
+      #     name: helm_lint
+      # - components/hmpps/build_docker:
+      #     name: build_docker
+      #     filters:
+      #       branches:
+      #         only:
+      #           - main
+      # - components/hmpps/deploy_env:
+      #     name: deploy_dev
+      #     env: "dev"
+      #     jira_update: true
+      #     context: hmpps-common-vars
+      #     filters:
+      #       branches:
+      #         only:
+      #           - main
+      #     requires:
+      #       - components/helm_lint
+      #       - components/unit_test
+      #       - components/build_docker
+      #     helm_timeout: 5m
