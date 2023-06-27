@@ -44,9 +44,8 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
 
-
   app:
-    build: .
+    build: ./app
     networks:
       - hmpps
     depends_on: [redis-profile, redis-shared, hmpps-auth]
@@ -67,7 +66,7 @@ services:
       - DPS_HOME_PAGE_URL=http://localhost:3000
 
   app-component:
-    build: ../hmpps-template-typescript
+    build: ./components
     networks:
       - hmpps
     depends_on: [redis-profile, redis-shared, hmpps-auth]
