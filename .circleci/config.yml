@@ -64,28 +64,28 @@ jobs:
     executor:
       name: hmpps/node
       tag: << pipeline.parameters.node-version >>
-    working_directory: ./app/
+    working_directory: ~/project/app
     steps:
       - build
   unit_test_app:
+    working_directory: ~/project/app
     executor:
       name: hmpps/node
       tag: << pipeline.parameters.node-version >>
-    working_directory: ./app/
     steps:
       - unit_test
   build_components:
+    working_directory: ~/project/components
     executor:
       name: hmpps/node
       tag: << pipeline.parameters.node-version >>
-    working_directory: ./components/
     steps:
       - build
   unit_test_components:
+    working_directory: ~/project/components
     executor:
       name: hmpps/node
       tag: << pipeline.parameters.node-version >>
-    working_directory: ./components/
     steps:
       - unit_test
 
