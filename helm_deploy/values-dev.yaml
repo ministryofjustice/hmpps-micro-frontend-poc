@@ -4,6 +4,21 @@
 generic-service:
   replicaCount: 2
 
+  ingress:
+    host: micro-frontend-poc-dev.hmpps.service.justice.gov.uk
+    annotations:
+      nginx.ingress.kubernetes.io/custom-http-errors: "418" 
+      nginx.ingress.kubernetes.io/server-snippet: |
+        ssi on;
+        ssi_silent_errors off;
+        location ~ /component/(prisoner/.*) {
+          proxy_pass https://micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk/$1;
+          #proxy_pass http://172.20.112.189:8080/$1;
+        }
+        location ~ /(component/assets/.*) {
+          proxy_pass https://micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk/$1;
+        }
+
   env:
     INGRESS_URL: "https://micro-frontend-poc-dev.hmpps.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
