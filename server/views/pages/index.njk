@@ -1,5 +1,21 @@
+<!--# set var="test" value="Hello Top!" -->
+<!--# echo var="test" -->
 
-  <!--# include virtual="/component/prisoner/A8469DY/" -->
-  <!--# set var="test" value="Hello nginx!" -->
-  <!--# echo var="test" -->
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% extends "../partials/layout.njk" %}
+{% set pageTitle = applicationName + " - Home" %}
+{% set mainClasses = "govuk-body" %}
+{% block beforeContent %}
+  {{ govukBackLink({
+    text: backLinkLabel,
+    href: "#",
+    classes: "govuk-link"
+  }) }}
+{% endblock %}
+{% block content %}
+  {% include "../partials/profileBanner/profileBanner.njk" %}
+  <!--# include virtual="/component/prisoner/{{ prisonId }}" -->
+{% endblock %}
 
+<!--# set var="testbot" value="Hello Bottom!" -->
+<!--# echo var="testbot" -->
