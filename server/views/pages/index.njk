@@ -1,18 +1,5 @@
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% extends "../partials/layout.njk" %}
-{% set pageTitle = applicationName + " - Home" %}
-{% set mainClasses = "govuk-body" %}
-{% block beforeContent %}
-  {{ govukBackLink({
-    text: backLinkLabel,
-    href: "#",
-    classes: "govuk-link"
-  }) }}
-{% endblock %}
-{% block content %}
-  {% include "../partials/profileBanner/profileBanner.njk" %}
-  <!--# include virtual="/component/prisoner/{{ prisonId }}" -->
-  <!--#include virtual="/component/prisoner/{{ prisonId }}" -->
+
+  <!--# include virtual="/component/prisoner/{{ prisonId }}/" -->
   <!--# set var="test" value="Hello nginx!" -->
   <!--# echo var="test" -->
-{% endblock %}
+
