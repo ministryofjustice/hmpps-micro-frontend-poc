@@ -81,7 +81,7 @@ workflows:
           filters:
             branches:
               only:
-                - main
+                - deploy
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
@@ -90,7 +90,7 @@ workflows:
           filters:
             branches:
               only:
-                - main
+                - deploy
           requires:
             - helm_lint
             - unit_test
