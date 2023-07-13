@@ -7,6 +7,7 @@ generic-service:
   ingress:
     enabled: true
     host: micro-frontend-poc-dev.hmpps.service.justice.gov.uk
+    tlsSecretName: hmpps-micro-frontend-poc-cert
     annotations:
       nginx.ingress.kubernetes.io/custom-http-errors: "418" 
       nginx.ingress.kubernetes.io/server-snippet: |
