@@ -29,7 +29,7 @@ export default function createApp(services: Services): express.Application {
 
   app.use(metricsMiddleware)
   app.use(setUpHealthChecks())
-  app.use(setUpWebSecurity())
+  // app.use(setUpWebSecurity())
   app.use(setUpWebSession())
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
