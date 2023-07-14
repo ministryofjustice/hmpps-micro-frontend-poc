@@ -2,20 +2,22 @@
 <!--# echo var="test" -->
 
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% extends "../partials/layout.njk" %}
 {% set pageTitle = applicationName + " - Home" %}
 {% set mainClasses = "govuk-body" %}
-{% block beforeContent %}
-  {{ govukBackLink({
-    text: backLinkLabel,
-    href: "#",
-    classes: "govuk-link"
-  }) }}
-{% endblock %}
-{% block content %}
-  {% include "../partials/profileBanner/profileBanner.njk" %}
-  <!--# include virtual="/component/prisoner/{{ prisonId }}" -->
-{% endblock %}
+
+<!DOCTYPE html>
+<html lang="{{ htmlLang | default('en') }}" class="govuk-template {{ htmlClasses }}">
+  <head>
+    <meta charset="utf-8">
+    <title{% if pageTitleLang %} lang="{{ pageTitleLang }}"{% endif %}>{% block pageTitle %}GOV.UK - The best place to find government services and information{% endblock %}</title>
+
+  </head>
+  <body>
+    <!--# include virtual="/component/header" -->
+  </body>
+</html>
+
+
 
 <!--# set var="testbot" value="Hello Bottom!" -->
 <!--# echo var="testbot" -->

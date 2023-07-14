@@ -14,11 +14,11 @@ generic-service:
         ssi on;
         ssi_silent_errors off;
         location ~ /component/(prisoner/.*) {
-          proxy_pass https://micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk/$1;
+          proxy_pass https://hmpps-micro-frontend-components-dev.hmpps.service.justice.gov.uk/component/$1;
           #proxy_pass http://172.20.112.189:8080/$1;
         }
         location ~ /(component/assets/.*) {
-          proxy_pass https://micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk/$1;
+          proxy_pass https://hmpps-micro-frontend-components-dev.hmpps.service.justice.gov.uk/$1;
         }
 
   env:
