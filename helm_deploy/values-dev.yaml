@@ -15,11 +15,11 @@ generic-service:
         ssi_silent_errors off;
         proxy_set_header Accept-Encoding "";
         location ~ /component/(prisoner/.*) {
-          proxy_pass https://micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk/$1;
+          proxy_pass http://hmpps-micro-frontend-poc-component.hmpps-micro-frontend-poc-dev.svc.cluster.local/$1;
           #proxy_pass http://172.20.112.189:8080/$1;
         }
         location ~ /(component/assets/.*) {
-          proxy_pass https://micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk/$1;
+          proxy_pass http://hmpps-micro-frontend-poc-component.hmpps-micro-frontend-poc-dev.svc.cluster.local/$1;
         }
 
   env:
