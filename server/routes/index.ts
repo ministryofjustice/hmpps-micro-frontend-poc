@@ -20,6 +20,17 @@ export default function routes(service: Services): Router {
     })
   })
 
+  get('/prisoner/full/:prisonerNumber', (req, res, next) => {
+    res.render('pages/indexFull', {
+      backLinkLabel: 'Back to search results',
+      prisonerName: profileBannerData.prisonerName,
+      prisonId: profileBannerData.prisonId,
+      profileBannerTopLinks,
+      alerts,
+      tabLinks,
+    })
+  })
+
   get('/', (req, res, next) => {
     res.redirect(config.apis.dpsHomePageUrl)
   })
