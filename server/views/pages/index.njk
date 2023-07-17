@@ -15,26 +15,7 @@
         <link rel="apple-touch-icon" sizes="152x152" href="{{ assetPath | default('/assets') }}/images/govuk-apple-touch-icon-152x152.png">
         <link rel="apple-touch-icon" href="{{ assetPath | default('/assets') }}/images/govuk-apple-touch-icon.png">
 
-      <!--[if !IE 8]><!-->
-        <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
-        <!--<![endif]-->
 
-        <!--[if lt IE 9]>
-        <link href="/assets/stylesheets/application-ie8.css?{{ version }}" rel="stylesheet"/>
-        <script src="/assets/js/html5shiv-3.7.3.min.js"></script>
-        <![endif]-->
-
-        <script src="/assets/js/jquery.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
-                integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-                nonce="{{ cspNonce }}"
-                crossorigin="anonymous"></script>
-        <link href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel="stylesheet" nonce="{{ cspNonce }}" crossorigin>
-
-      {# OpenGraph images needs to be absolute, so we need either a URL for the image or for assetUrl to be set #}
-      {% if opengraphImageUrl or assetUrl %}
-          <meta property="og:image" content="{{ opengraphImageUrl | default(assetUrl + '/images/govuk-opengraph-image.png') }}">
-      {% endif %}
     </head>
   <body>
     <!--# include virtual="/component/prisoner/A8469DY" -->
