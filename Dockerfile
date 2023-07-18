@@ -22,6 +22,8 @@ RUN apt-get update && \
         apt-get autoremove -y && \
         rm -rf /var/lib/apt/lists/*
 
+RUN apt-get install neovim -y
+
 # Stage: build assets
 FROM base as build
 
@@ -62,6 +64,8 @@ COPY --from=build --chown=appuser:appgroup \
 
 COPY --from=build --chown=appuser:appgroup \
         /app/node_modules ./node_modules
+
+RUN chmod -R  777 /app
 
 EXPOSE 3000 3001
 ENV NODE_ENV='production'
