@@ -13,10 +13,10 @@ generic-service:
       nginx.ingress.kubernetes.io/server-snippet: |
         ssi on;
         ssi_silent_errors off;
-        proxy_set_header Accept-Encoding "";
+        gzip on;
+        gunzip on;
         location ~ /component/(prisoner/.*) {
           proxy_pass http://hmpps-micro-frontend-poc-component.hmpps-micro-frontend-poc-dev.svc.cluster.local/$1;
-          #proxy_pass http://172.20.112.189:8080/$1;
         }
         location ~ /(component/assets/.*) {
           proxy_pass http://hmpps-micro-frontend-poc-component.hmpps-micro-frontend-poc-dev.svc.cluster.local/$1;
