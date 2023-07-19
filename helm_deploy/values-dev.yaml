@@ -15,19 +15,13 @@ generic-service:
         ssi_silent_errors off;
         gzip on;
         gunzip on;
-        location ~ /component/(prisoner/.*) {
-          proxy_pass https://micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk/$1;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
-          proxy_ssl_server_name on;
-        }
         location ~ /(component/assets/.*) {
+          proxy_pass https://micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk/component/assets/$1;
+          proxy_set_header Host micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk;
+        }
+        location ~ /component/(.*) {
           proxy_pass https://micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk/$1;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
-          proxy_ssl_server_name on;
+          proxy_set_header Host micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk;
         }
 
   env:
