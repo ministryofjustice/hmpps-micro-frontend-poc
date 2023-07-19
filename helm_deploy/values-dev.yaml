@@ -16,7 +16,7 @@ generic-service:
         gzip on;
         gunzip on;
         location ~ /(component/assets/.*) {
-          proxy_pass https://micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk/component/assets/$1;
+          proxy_pass https://micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk/$1;
           proxy_set_header Host micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk;
         }
         location ~ /component/(.*) {
