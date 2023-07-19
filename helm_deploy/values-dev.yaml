@@ -16,10 +16,18 @@ generic-service:
         gzip on;
         gunzip on;
         location ~ /component/(prisoner/.*) {
-          proxy_pass http://hmpps-micro-frontend-poc-component.hmpps-micro-frontend-poc-dev.svc.cluster.local/$1;
+          proxy_pass https://micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk/$1;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
         }
         location ~ /(component/assets/.*) {
-          proxy_pass http://hmpps-micro-frontend-poc-component.hmpps-micro-frontend-poc-dev.svc.cluster.local/$1;
+          proxy_pass https://micro-frontend-poc-component-dev.hmpps.service.justice.gov.uk/$1;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
         }
 
   env:
