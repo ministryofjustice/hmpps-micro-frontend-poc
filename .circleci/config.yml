@@ -9,12 +9,13 @@ parameters:
     type: string
     default: 18.12-browsers
 
-commands:
+jobs:
   build:
-    description: "Build step"
+    executor:
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
     steps:
-      - checkout:
-          path: "~/project"
+      - checkout
       - run:
           name: Update npm
           command: 'sudo npm install -g npm@latest'
@@ -47,10 +48,11 @@ commands:
             - dist
 
   unit_test:
-    description: "Runs unit tests"
+    executor:
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
     steps:
-      - checkout:
-          path: "~/project"
+      - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
@@ -61,97 +63,36 @@ commands:
       - store_artifacts:
           path: test_results/unit-test-reports.html
 
-jobs:
-  build_app:
-    executor:
-      name: hmpps/node
-      tag: << pipeline.parameters.node-version >>
-    working_directory: ~/project/app
-    steps:
-      - build
-  unit_test_app:
-    working_directory: ~/project/app
-    executor:
-      name: hmpps/node
-      tag: << pipeline.parameters.node-version >>
-    steps:
-      - unit_test
-  build_components:
-    working_directory: ~/project/components
-    executor:
-      name: hmpps/node
-      tag: << pipeline.parameters.node-version >>
-    steps:
-      - build
-  unit_test_components:
-    working_directory: ~/project/components
-    executor:
-      name: hmpps/node
-      tag: << pipeline.parameters.node-version >>
-    steps:
-      - unit_test
-
 workflows:
   version: 2
   build-test-and-deploy:
     jobs:
-      - build_app:
+      - build:
           filters:
             tags:
               ignore: /.*/
-      - unit_test_app:
+      - unit_test:
           requires:
-            - build_app
-      # Dont deploy these at the moment
-      # - app/hmpps/helm_lint:
-      #     name: helm_lint
-      # - app/hmpps/build_docker:
-      #     name: build_docker
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main
-      # - app/hmpps/deploy_env:
-      #     name: app/deploy_dev
-      #     env: "dev"
-      #     jira_update: true
-      #     context: hmpps-common-vars
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main
-      #     requires:
-      #       - app/helm_lint
-      #       - app/unit_test
-      #       - app/build_docker
-      #     helm_timeout: 5m
-      - build_components:
+            - build
+      - hmpps/helm_lint:
+          name: helm_lint
+      - hmpps/build_docker:
+          name: build_docker
           filters:
-            tags:
-              ignore: /.*/
-      - unit_test_components:
+            branches:
+              only:
+                - main
+      - hmpps/deploy_env:
+          name: deploy_dev
+          env: "dev"
+          jira_update: true
+          context: hmpps-common-vars
+          filters:
+            branches:
+              only:
+                - main
           requires:
-            - build_components
-      # Dont deploy these at the moment
-      # - components/hmpps/helm_lint:
-      #     name: helm_lint
-      # - components/hmpps/build_docker:
-      #     name: build_docker
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main
-      # - components/hmpps/deploy_env:
-      #     name: deploy_dev
-      #     env: "dev"
-      #     jira_update: true
-      #     context: hmpps-common-vars
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main
-      #     requires:
-      #       - components/helm_lint
-      #       - components/unit_test
-      #       - components/build_docker
-      #     helm_timeout: 5m
+            - helm_lint
+            - unit_test
+            - build_docker
+          helm_timeout: 5m
