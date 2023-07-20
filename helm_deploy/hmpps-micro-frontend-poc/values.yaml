@@ -9,6 +9,11 @@ generic-service:
     tag: app_version    # override at deployment time
     port: 3000
 
+  ingress:
+    enabled: true
+    host: app-hostname.local    # override per environment
+    tlsSecretName: hmpps-micro-frontend-poc-cert
+
   livenessProbe:
     httpGet:
       path: /ping
@@ -16,6 +21,12 @@ generic-service:
   readinessProbe:
     httpGet:
       path: /ping
+
+  custommetrics:
+    enabled: true
+    scrapeInterval: 15s
+    metricsPath: /metrics
+    metricsPort: 3001
 
   # Environment variables to load into the deployment
   env:
