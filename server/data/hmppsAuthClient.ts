@@ -6,10 +6,6 @@ import logger from '../../logger'
 import config from '../config'
 import generateOauthClientToken from '../authentication/clientCredentials'
 import RestClient from './restClient'
-import { LocationDummyDataB } from './localMockData/locations'
-import { CaseLoadsDummyDataA } from './localMockData/caseLoad'
-import { CaseLoad } from '../interfaces/caseLoad'
-import { Location } from '../interfaces/location'
 
 const timeoutSpec = config.apis.hmppsAuth.timeout
 const hmppsAuthUrl = config.apis.hmppsAuth.url
@@ -45,33 +41,10 @@ export interface UserRole {
 }
 
 export default class HmppsAuthClient {
-  // eslint-disable-next-line no-empty-function
   constructor(private readonly tokenStore: TokenStore) {}
 
   private static restClient(token: string): RestClient {
     return new RestClient('HMPPS Auth Client', config.apis.hmppsAuth, token)
-  }
-
-  getUserLocations(token: string): Promise<Location[]> {
-    return HmppsAuthClient.restClient(token)
-      .get({ path: '/api/users/me/locations' })
-      .catch(err => {
-        if (config.localMockData === 'true') {
-          return LocationDummyDataB
-        }
-        return err
-      }) as Promise<Location[]>
-  }
-
-  getUserCaseLoads(token: string): Promise<CaseLoad[]> {
-    return HmppsAuthClient.restClient(token)
-      .get({ path: '/api/users/me/caseLoads', query: 'allCaseloads=true' })
-      .catch(err => {
-        if (config.localMockData === 'true') {
-          return CaseLoadsDummyDataA
-        }
-        return err
-      }) as Promise<CaseLoad[]>
   }
 
   getUser(token: string): Promise<User> {
@@ -87,12 +60,14 @@ export default class HmppsAuthClient {
 
   async getSystemClientToken(username?: string): Promise<string> {
     const key = username || '%ANONYMOUS%'
+
     const token = await this.tokenStore.getToken(key)
     if (token) {
       return token
     }
 
     const newToken = await getSystemClientTokenFromHmppsAuth(username)
+
     // set TTL slightly less than expiry of token. Async but no need to wait
     await this.tokenStore.setToken(key, newToken.body.access_token, newToken.body.expires_in - 60)
 

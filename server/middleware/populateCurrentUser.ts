@@ -20,22 +20,3 @@ export default function populateCurrentUser(userService: UserService): RequestHa
     }
   }
 }
-
-export function getUserRoles(userService: UserService): RequestHandler {
-  return async (req, res, next) => {
-    try {
-      if (res.locals.user) {
-        const roles = res.locals.user && (await userService.getUserRoles(res.locals.user.token))
-        if (roles) {
-          res.locals.user.userRoles = roles
-        } else {
-          logger.info('No user roles available')
-        }
-      }
-      next()
-    } catch (error) {
-      logger.error(error, `Failed to retrieve roles for: ${res.locals.user && res.locals.user.username}`)
-      next(error)
-    }
-  }
-}
