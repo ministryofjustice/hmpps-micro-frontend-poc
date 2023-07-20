@@ -4,6 +4,12 @@
 generic-service:
   replicaCount: 2
 
+  ingress:
+    host: hmpps-micro-frontend-poc-dev.hmpps.service.justice.gov.uk
+    contextColour: green
+    v1_2_enabled: true
+    v0_47_enabled: false
+
   env:
     INGRESS_URL: "https://micro-frontend-poc-dev.hmpps.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
