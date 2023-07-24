@@ -6,13 +6,13 @@ import config from '../config'
 import logger from '../../logger'
 
 export default function setUpWebSession(): Router {
-  const client = createRedisClient({ legacyMode: true })
+  const client = createRedisClient()
   client.connect().catch((err: Error) => logger.error(`Error connecting to Redis`, err))
   const options = {
     cookie: { secure: config.https, maxAge: 120 * 60 * 60 },
     sessionSecret: config.session.secret,
     sharedSessionApi: {
-      baseUrl: 'API_URL',
+      baseUrl: config.apis.session.url,
       token: 'SOME_TOKEN',
     },
   }
