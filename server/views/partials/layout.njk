@@ -1,4 +1,5 @@
 {% extends "govuk/template.njk" %}
+{% from "govuk/components/footer/macro.njk" import govukFooter -%}
 
 {% block head %}
   <!--[if !IE 8]><!-->
@@ -22,10 +23,20 @@
 {% block pageTitle %}{{pageTitle | default(applicationName)}}{% endblock %}
 
 {% block header %}
-  {% include "./header.njk" %}
+  <!--# block name="header_fallback" -->
+    {% include "./header.njk" %}
+  <!--# endblock -->
+  <!--#include virtual="/component/header?sessionServiceName=hmpps-micro-frontend-poc" stub="header_fallback" -->
 {% endblock %}
 
 {% block bodyStart %}
+{% endblock %}
+
+{% block footer %}
+  <!--# block name="footer_fallback" -->
+    {{ govukFooter({}) }}
+  <!--# endblock -->
+  <!--#include virtual="/component/footer?sessionServiceName=hmpps-micro-frontend-poc" stub="footer_fallback" -->
 {% endblock %}
 
 {% block bodyEnd %}
