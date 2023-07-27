@@ -7,6 +7,7 @@ interface UserDetails {
 }
 
 export default class UserService {
+  // eslint-disable-next-line no-empty-function
   constructor(private readonly hmppsAuthClient: HmppsAuthClient) {}
 
   async getUser(token: string): Promise<UserDetails> {
