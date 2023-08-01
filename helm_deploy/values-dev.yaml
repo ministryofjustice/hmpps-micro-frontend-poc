@@ -16,11 +16,11 @@ generic-service:
         gzip on;
         gunzip on;
         location ~ /(component/assets/.*) {
-          proxy_pass https://hmpps-micro-frontend-components-dev.hmpps.service.justice.gov.uk/output/$1$is_args$args;
+          proxy_pass https://hmpps-micro-frontend-components-dev.hmpps.service.justice.gov.uk/$1$is_args$args;
           proxy_set_header Host hmpps-micro-frontend-components-dev.hmpps.service.justice.gov.uk;
         }
         location ~ /component/(.*) {
-          proxy_pass https://hmpps-micro-frontend-components-dev.hmpps.service.justice.gov.uk/output/$1$is_args$args;
+          proxy_pass https://hmpps-micro-frontend-components-dev.hmpps.service.justice.gov.uk/$1$is_args$args;
           proxy_set_header Host hmpps-micro-frontend-components-dev.hmpps.service.justice.gov.uk;
         }
   env:
