@@ -12,7 +12,8 @@ export default function routes(service: Services): Router {
   get('/', async (req, res, next) => {
     const client = new ComponentClient()
     const header = await client.getHeader(res.locals.user.token)
-    res.render('pages/index', { header })
+    const footer = await client.footer(res.locals.user.token)
+    res.render('pages/index', { header, footer })
   })
 
   return router

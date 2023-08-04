@@ -23,17 +23,22 @@
 {% block pageTitle %}{{pageTitle | default(applicationName)}}{% endblock %}
 
 {% block header %}
-  {{ header | safe }}
+  {% if header %}
+    {{ header | safe }}
+  {% else %}
+    {% include "./header.njk" %}
+  {% endif %}
 {% endblock %}
 
 {% block bodyStart %}
 {% endblock %}
 
 {% block footer %}
-  <!--# block name="footer_fallback" -->
+  {% if footer %}
+    {{ footer | safe }}
+  {% else %}
     {{ govukFooter({}) }}
-  <!--# endblock -->
-  <!--#include virtual="/component/footer?sessionServiceName=hmpps-micro-frontend-poc" stub="footer_fallback" -->
+  {% endif %}
 {% endblock %}
 
 {% block bodyEnd %}
