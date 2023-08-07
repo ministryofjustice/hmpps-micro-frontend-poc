@@ -21,26 +21,18 @@ export default class ComponentClient {
   }
 
   async getHeader(userToken: string): Promise<Component> {
-    const { html } = await this.restClient.get<{ html: string }>({
+    const { html, css, javascript } = await this.restClient.get<Component>({
       path: '/header',
       headers: { 'x-user-token': userToken },
     })
-    return {
-      html,
-      css: ['http://localhost/css', 'http://localhost/css2'],
-      javascript: ['http://example.com/js', 'http://example.com/js2'],
-    }
+    return { html, css, javascript }
   }
 
   async footer(userToken: string): Promise<Component> {
-    const { html } = await this.restClient.get<{ html: string }>({
+    const { html, css, javascript } = await this.restClient.get<Component>({
       path: '/footer',
       headers: { 'x-user-token': userToken },
     })
-    return {
-      html,
-      css: ['http://localhost/css3'],
-      javascript: ['http://example.com/js3'],
-    }
+    return { html, css, javascript }
   }
 }
