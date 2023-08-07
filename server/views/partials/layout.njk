@@ -1,26 +1,42 @@
 {% extends "govuk/template.njk" %}
-{% from "govuk/components/footer/macro.njk" import govukFooter -%}
+{%- from "govuk/components/footer/macro.njk" import govukFooter -%}
 
 {% block head %}
   <!--[if !IE 8]><!-->
-  <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
+  <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet" />
   <!--<![endif]-->
 
   <!--[if lt IE 9]>
-  <link href="/assets/stylesheets/application-ie8.css?{{ version }}" rel="stylesheet"/>
-  <script src="/assets/js/html5shiv-3.7.3.min.js"></script>
+    <link href="/assets/stylesheets/application-ie8.css?{{ version }}" rel="stylesheet" />
+    <script src="/assets/js/html5shiv-3.7.3.min.js"></script>
   <![endif]-->
 
-  <script src="/assets/js/jquery.min.js"></script> 
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
-          integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-          nonce="{{ cspNonce }}"
-          crossorigin="anonymous"></script>
-  <link href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel="stylesheet" nonce="{{ cspNonce }}" crossorigin>
-
+  <script src="/assets/js/jquery.min.js"></script>
+  <script
+    src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+    integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+    nonce="{{ cspNonce }}"
+    crossorigin="anonymous"
+  ></script>
+  {% if jsIncludes %}
+    {% for js in jsIncludes %}
+      <script src="{{ js }}"></script>
+    {% endfor %}
+  {% endif %}
+  <link
+    href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css"
+    rel="stylesheet"
+    nonce="{{ cspNonce }}"
+    crossorigin
+  />
+  {% if cssIncludes %}
+    {% for css in cssIncludes %}
+      <link href="{{ css }}" rel="stylesheet" />
+    {% endfor %}
+  {% endif %}
 {% endblock %}
 
-{% block pageTitle %}{{pageTitle | default(applicationName)}}{% endblock %}
+{% block pageTitle %}{{ pageTitle | default(applicationName) }}{% endblock %}
 
 {% block header %}
   {% if header %}
