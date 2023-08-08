@@ -1,5 +1,10 @@
 import RestClient from './restClient'
 
+interface Component {
+  html: string
+  css?: string[]
+  javascript?: string[]
+}
 export default class ComponentClient {
   private restClient: RestClient
 
@@ -15,17 +20,19 @@ export default class ComponentClient {
     )
   }
 
-  async getHeader(userToken: string): Promise<string> {
-    const result = (await this.restClient.get({ path: '/header', headers: { 'x-user-token': userToken } })) as {
-      html: string
-    }
-    return result.html
+  async getHeader(userToken: string): Promise<Component> {
+    const { html, css, javascript } = await this.restClient.get<Component>({
+      path: '/header',
+      headers: { 'x-user-token': userToken },
+    })
+    return { html, css, javascript }
   }
 
-  async footer(userToken: string): Promise<string> {
-    const result = (await this.restClient.get({ path: '/footer', headers: { 'x-user-token': userToken } })) as {
-      html: string
-    }
-    return result.html
+  async footer(userToken: string): Promise<Component> {
+    const { html, css, javascript } = await this.restClient.get<Component>({
+      path: '/footer',
+      headers: { 'x-user-token': userToken },
+    })
+    return { html, css, javascript }
   }
 }

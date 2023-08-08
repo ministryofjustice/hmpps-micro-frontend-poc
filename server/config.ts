@@ -69,6 +69,9 @@ export default {
     session: {
       url: get('SESSION_API_URL', 'http://localhost:8100', requiredInProduction),
     },
+    component: {
+      url: get('COMPONENT_API_URL', ''),
+    },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
 }

@@ -13,7 +13,24 @@ export default function routes(service: Services): Router {
     const client = new ComponentClient()
     const header = await client.getHeader(res.locals.user.token)
     const footer = await client.footer(res.locals.user.token)
-    res.render('pages/index', { header, footer })
+    let cssIncludes: string[] = []
+    if (header.css) {
+      cssIncludes = [...cssIncludes, ...header.css]
+    }
+    if (footer.css) {
+      cssIncludes = [...cssIncludes, ...footer.css]
+    }
+
+    let jsIncludes: string[] = []
+
+    if (header.javascript) {
+      jsIncludes = [...jsIncludes, ...header.javascript]
+    }
+    if (footer.javascript) {
+      jsIncludes = [...jsIncludes, ...footer.javascript]
+    }
+
+    res.render('pages/index', { header: header.html, footer: footer.html, cssIncludes, jsIncludes })
   })
 
   return router
