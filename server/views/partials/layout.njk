@@ -20,7 +20,7 @@
   ></script>
   {% if jsIncludes %}
     {% for js in jsIncludes %}
-      <script src="{{ js }}"></script>
+      <script src="{{ js }}" nonce="{{ cspNonce }}"></script>
     {% endfor %}
   {% endif %}
   <link
@@ -31,7 +31,7 @@
   />
   {% if cssIncludes %}
     {% for css in cssIncludes %}
-      <link href="{{ css }}" rel="stylesheet" />
+      <link href="{{ css }}" nonce="{{ cspNonce }}" rel="stylesheet" />
     {% endfor %}
   {% endif %}
 {% endblock %}
