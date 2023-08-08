@@ -9,20 +9,7 @@ generic-service:
     contextColour: green
     v1_2_enabled: true
     v0_47_enabled: false
-    annotations:
-      nginx.ingress.kubernetes.io/server-snippet: |
-        ssi on;
-        ssi_silent_errors off;
-        gzip on;
-        gunzip on;
-        location ~ /(component/assets/.*) {
-          proxy_pass https://hmpps-micro-frontend-components-dev.hmpps.service.justice.gov.uk/$1$is_args$args;
-          proxy_set_header Host hmpps-micro-frontend-components-dev.hmpps.service.justice.gov.uk;
-        }
-        location ~ /component/(.*) {
-          proxy_pass https://hmpps-micro-frontend-components-dev.hmpps.service.justice.gov.uk/$1$is_args$args;
-          proxy_set_header Host hmpps-micro-frontend-components-dev.hmpps.service.justice.gov.uk;
-        }
+
   env:
     INGRESS_URL: "https://micro-frontend-poc-dev.hmpps.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
