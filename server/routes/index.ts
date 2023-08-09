@@ -2,7 +2,6 @@ import { type RequestHandler, Router } from 'express'
 
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import ComponentClient from '../data/componentClient'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function routes(service: Services): Router {
@@ -10,27 +9,7 @@ export default function routes(service: Services): Router {
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', async (req, res, next) => {
-    const client = new ComponentClient()
-    const header = await client.getHeader(res.locals.user.token)
-    const footer = await client.footer(res.locals.user.token)
-    let cssIncludes: string[] = []
-    if (header.css) {
-      cssIncludes = [...cssIncludes, ...header.css]
-    }
-    if (footer.css) {
-      cssIncludes = [...cssIncludes, ...footer.css]
-    }
-
-    let jsIncludes: string[] = []
-
-    if (header.javascript) {
-      jsIncludes = [...jsIncludes, ...header.javascript]
-    }
-    if (footer.javascript) {
-      jsIncludes = [...jsIncludes, ...footer.javascript]
-    }
-
-    res.render('pages/index', { header: header.html, footer: footer.html, cssIncludes, jsIncludes })
+    res.render('pages/index')
   })
 
   return router

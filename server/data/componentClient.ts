@@ -1,38 +1,24 @@
 import RestClient from './restClient'
+import config from '../config'
 
-interface Component {
+export interface Component {
   html: string
   css?: string[]
   javascript?: string[]
 }
+
+export type ComponentName = 'footer' | 'header'
 export default class ComponentClient {
   private restClient: RestClient
 
   constructor() {
-    this.restClient = new RestClient(
-      'Components',
-      {
-        url: 'https://hmpps-micro-frontend-components-dev.hmpps.service.justice.gov.uk',
-        timeout: { response: 10000, deadline: 10000 },
-        agent: { timeout: 10000 },
-      },
-      '',
-    )
+    this.restClient = new RestClient('Components', config.apis.component, '')
   }
 
-  async getHeader(userToken: string): Promise<Component> {
-    const { html, css, javascript } = await this.restClient.get<Component>({
-      path: '/header',
+  async getComponent(component: ComponentName, userToken: string): Promise<Component> {
+    return this.restClient.get<Component>({
+      path: `/${component}`,
       headers: { 'x-user-token': userToken },
     })
-    return { html, css, javascript }
-  }
-
-  async footer(userToken: string): Promise<Component> {
-    const { html, css, javascript } = await this.restClient.get<Component>({
-      path: '/footer',
-      headers: { 'x-user-token': userToken },
-    })
-    return { html, css, javascript }
   }
 }
