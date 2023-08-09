@@ -22,10 +22,12 @@ export default function setUpWebSecurity(): Router {
   // page by an attacker.
   const scriptSrc = ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`]
   const styleSrc = ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`]
+  const imgSrc = ["'self'", 'data:']
 
   if (config.apis.component.url) {
     scriptSrc.push(config.apis.component.url)
     styleSrc.push(config.apis.component.url)
+    imgSrc.push(config.apis.component.url)
   }
 
   router.use(
@@ -36,6 +38,7 @@ export default function setUpWebSecurity(): Router {
           scriptSrc,
           styleSrc,
           fontSrc: ["'self'"],
+          imgSrc,
         },
       },
       crossOriginEmbedderPolicy: true,
