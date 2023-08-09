@@ -1,10 +1,12 @@
 import RestClient from './restClient'
 
-interface Component {
+export interface Component {
   html: string
   css?: string[]
   javascript?: string[]
 }
+
+export type ComponentName = 'footer' | 'header'
 export default class ComponentClient {
   private restClient: RestClient
 
@@ -20,19 +22,10 @@ export default class ComponentClient {
     )
   }
 
-  async getHeader(userToken: string): Promise<Component> {
-    const { html, css, javascript } = await this.restClient.get<Component>({
-      path: '/header',
+  async getComponent(component: ComponentName, userToken: string): Promise<Component> {
+    return this.restClient.get<Component>({
+      path: `/${component}`,
       headers: { 'x-user-token': userToken },
     })
-    return { html, css, javascript }
-  }
-
-  async footer(userToken: string): Promise<Component> {
-    const { html, css, javascript } = await this.restClient.get<Component>({
-      path: '/footer',
-      headers: { 'x-user-token': userToken },
-    })
-    return { html, css, javascript }
   }
 }

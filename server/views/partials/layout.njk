@@ -18,8 +18,8 @@
     nonce="{{ cspNonce }}"
     crossorigin="anonymous"
   ></script>
-  {% if jsIncludes %}
-    {% for js in jsIncludes %}
+  {% if feComponents.jsIncludes %}
+    {% for js in feComponents.jsIncludes %}
       <script src="{{ js }}" nonce="{{ cspNonce }}"></script>
     {% endfor %}
   {% endif %}
@@ -29,8 +29,8 @@
     nonce="{{ cspNonce }}"
     crossorigin
   />
-  {% if cssIncludes %}
-    {% for css in cssIncludes %}
+  {% if feComponents.cssIncludes %}
+    {% for css in feComponents.cssIncludes %}
       <link href="{{ css }}" nonce="{{ cspNonce }}" rel="stylesheet" />
     {% endfor %}
   {% endif %}
@@ -39,8 +39,8 @@
 {% block pageTitle %}{{ pageTitle | default(applicationName) }}{% endblock %}
 
 {% block header %}
-  {% if header %}
-    {{ header | safe }}
+  {% if feComponents.header %}
+    {{ feComponents.header | safe }}
   {% else %}
     {% include "./header.njk" %}
   {% endif %}
@@ -50,8 +50,8 @@
 {% endblock %}
 
 {% block footer %}
-  {% if footer %}
-    {{ footer | safe }}
+  {% if feComponents.footer %}
+    {{ feComponents.footer | safe }}
   {% else %}
     {{ govukFooter({}) }}
   {% endif %}
