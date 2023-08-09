@@ -1,4 +1,5 @@
 import RestClient from './restClient'
+import config from '../config'
 
 export interface Component {
   html: string
@@ -11,15 +12,7 @@ export default class ComponentClient {
   private restClient: RestClient
 
   constructor() {
-    this.restClient = new RestClient(
-      'Components',
-      {
-        url: 'https://hmpps-micro-frontend-components-dev.hmpps.service.justice.gov.uk',
-        timeout: { response: 10000, deadline: 10000 },
-        agent: { timeout: 10000 },
-      },
-      '',
-    )
+    this.restClient = new RestClient('Components', config.apis.component, '')
   }
 
   async getComponent(component: ComponentName, userToken: string): Promise<Component> {
