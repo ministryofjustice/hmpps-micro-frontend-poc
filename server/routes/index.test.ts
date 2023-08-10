@@ -7,7 +7,7 @@ let app: Express
 
 beforeEach(() => {
   app = appWithAllRoutes({})
-  const api = nock('https://hmpps-micro-frontend-components-dev.hmpps.service.justice.gov.uk/')
+  const api = nock('https://frontend-components-dev.hmpps.service.justice.gov.uk/')
   api.get('/header').reply(200, { html: '' }, { 'Content-Type': 'application/json' })
   api.get('/footer').reply(200, { html: '' }, { 'Content-Type': 'application/json' })
 })
